@@ -1,0 +1,100 @@
+﻿Category,name,mrp,discountPercent,availableQuantity,discountedSellingPrice,weightInGms,outOfStock,quantity
+Fruits & Vegetables,Onion,2500,16,3,2100,1000,FALSE,1
+Fruits & Vegetables,Tomato Hybrid,4200,16,3,3500,1000,FALSE,1
+Fruits & Vegetables,Tender Coconut,5100,15,3,4300,58,FALSE,1
+Fruits & Vegetables,Coriander Leaves,2000,15,3,1700,100,FALSE,100
+Fruits & Vegetables,Ladies Finger ,1400,14,3,1200,250,FALSE,250
+Fruits & Vegetables,Potato,3500,17,3,2900,1000,FALSE,1
+Fruits & Vegetables,Lemon,7500,16,3,6300,200,FALSE,200
+Fruits & Vegetables,Watermelon ,5800,15,3,4900,58,FALSE,1
+Fruits & Vegetables,Capsicum Green ,2300,17,3,1900,250,FALSE,250
+Fruits & Vegetables,Chilli Green ,1900,15,3,1600,100,FALSE,100
+Fruits & Vegetables,Banana Robusta,2900,17,3,2400,348,FALSE,6
+Fruits & Vegetables,Garlic Indian ,1100,18,3,900,100,FALSE,100
+Fruits & Vegetables,Cauliflower,2600,15,3,2200,58,FALSE,1
+Fruits & Vegetables,Ginger,1400,14,3,1200,200,FALSE,200
+Fruits & Vegetables,Spinach,1900,15,3,1600,250,FALSE,250
+Fruits & Vegetables,Muskmelon,4200,16,3,3500,58,FALSE,1
+Fruits & Vegetables,Cabbage ,1500,13,3,1300,58,FALSE,1
+Fruits & Vegetables,Methi,3000,16,3,2500,250,FALSE,250
+Fruits & Vegetables,Broccoli,3600,16,3,3000,500,FALSE,500
+Fruits & Vegetables,Sapota,3000,16,3,2500,348,FALSE,6
+Fruits & Vegetables,Onion,6800,16,3,5700,3000,FALSE,3
+Fruits & Vegetables,Potato,10000,16,3,8400,3000,FALSE,3
+Fruits & Vegetables,Orange Nagpur,8200,15,3,6900,232,FALSE,4
+Fruits & Vegetables,Mint Leaves ,1100,18,3,900,100,FALSE,100
+Fruits & Vegetables,Beans French,3300,15,3,2800,250,FALSE,250
+Fruits & Vegetables,Bottle Gourd ,2600,15,3,2200,58,FALSE,1
+Fruits & Vegetables,Banana Elaichi ,5800,15,3,4900,348,FALSE,6
+Fruits & Vegetables,Coconut Big,3600,16,3,3000,58,FALSE,1
+Fruits & Vegetables,Curry Leaves,1300,15,3,1100,50,FALSE,50
+Fruits & Vegetables,Brinjal Bharta,1900,15,3,1600,58,FALSE,1
+Fruits & Vegetables,Lettuce Iceberg,2500,16,3,2100,250,FALSE,250
+Fruits & Vegetables,Papaya,5400,16,3,4500,58,FALSE,1
+Fruits & Vegetables,Apple Shimla,14200,16,3,11900,232,FALSE,4
+Fruits & Vegetables,Bitter Gourd,1800,16,3,1500,250,FALSE,250
+Fruits & Vegetables,Brinjal Small,1800,16,3,1500,250,FALSE,250
+Fruits & Vegetables,Sweet Corn,3600,16,3,3000,116,FALSE,2
+Fruits & Vegetables,Spring Onion ,1800,16,3,1500,250,FALSE,250
+Fruits & Vegetables,Bell Peppers Red & Yellow ,11800,16,3,9900,116,FALSE,2
+Fruits & Vegetables,Pomegranate ,10600,16,3,8900,116,FALSE,2
+Fruits & Vegetables,Sweet Lime,3000,16,3,2500,116,FALSE,2
+Fruits & Vegetables,Baby Potato,1900,15,3,1600,500,FALSE,500
+Fruits & Vegetables,Coccinia,3200,15,3,2700,250,FALSE,250
+Fruits & Vegetables,Guava,5400,16,3,4500,232,FALSE,4
+Fruits & Vegetables,Apple Washington,17700,15,3,14900,232,FALSE,4
+Fruits & Vegetables,Amla,3200,15,3,2700,250,FALSE,250
+Fruits & Vegetables,Beans Cluster,3000,16,3,2500,250,FALSE,250
+Fruits & Vegetables,Apple Royal Gala,18900,15,3,15900,232,FALSE,4
+Fruits & Vegetables,Chilli Bhaji,3000,16,3,2500,250,FALSE,250
+Fruits & Vegetables,Lettuce Green,2300,17,3,1900,100,FALSE,100
+Fruits & Vegetables,Baby Corn Peeled,3500,17,3,2900,250,FALSE,250
+Fruits & Vegetables,Mixed Sprouts,3500,17,3,2900,200,FALSE,200
+Fruits & Vegetables,Zucchini Green,3500,17,3,2900,250,FALSE,250
+Fruits & Vegetables,Beans Broad,4200,16,3,3500,250,FALSE,250
+Fruits & Vegetables,Raw Banana,2000,15,6,1700,500,FALSE,500
+Fruits & Vegetables,Colocasia ,2900,17,6,2400,500,FALSE,500
+Fruits & Vegetables,Tomato Cherry ,3500,17,3,2900,200,FALSE,200
+Fruits & Vegetables,Sweet Potato ,3800,15,3,3200,500,FALSE,500
+Fruits & Vegetables,Pineapple Slice,8900,15,3,7500,200,FALSE,200
+Fruits & Vegetables,Orange,5400,16,3,4500,116,FALSE,2
+Fruits & Vegetables,Dragon Fruit Imported,7000,15,3,5900,58,FALSE,1
+Fruits & Vegetables,Zucchini Yellow,4200,16,3,3500,250,FALSE,500
+Fruits & Vegetables,Apple Kinnaur,14200,16,6,11900,232,FALSE,4
+Fruits & Vegetables,Pineapple,9400,15,3,7900,58,FALSE,1
+Fruits & Vegetables,Basil,2000,15,3,1700,100,FALSE,100
+Fruits & Vegetables,Parsley,1700,17,3,1400,100,FALSE,100
+Fruits & Vegetables,Ridge Gourd,3000,16,3,2500,500,FALSE,500
+Fruits & Vegetables,Papaya Cut,4600,15,3,3900,200,FALSE,200
+Fruits & Vegetables,Pomegranate Peeled,5800,15,2,4900,100,FALSE,100
+Fruits & Vegetables,Pear Green Imported,8200,15,3,6900,116,FALSE,2
+Fruits & Vegetables,Guava Thai,7000,15,3,5900,116,FALSE,2
+Fruits & Vegetables,Lettuce Red,2000,15,3,1700,100,FALSE,100
+Fruits & Vegetables,Mango Raw,6000,16,3,5000,500,FALSE,500
+Fruits & Vegetables,Biryani /Pulav Mix,5800,15,3,4900,250,FALSE,250
+Fruits & Vegetables,Banana Nendran,5400,16,6,4500,500,FALSE,500
+Fruits & Vegetables,Pumpkin Cut,3000,16,3,2500,200,FALSE,200
+Fruits & Vegetables,Banana Red,5400,16,6,4500,500,FALSE,500
+Fruits & Vegetables,Radish White,2300,17,6,1900,500,FALSE,500
+Fruits & Vegetables,Avocado Indian Premium,17700,15,3,14900,58,FALSE,1
+Fruits & Vegetables,Banana Leaf,1200,16,2,1000,58,FALSE,1
+Fruits & Vegetables,Sponge Gourd,2500,16,2,2100,300,FALSE,300
+Fruits & Vegetables,Zama Organics Carrot,2000,15,3,1700,250,FALSE,250
+Fruits & Vegetables,Safal Frozen - Mixed Vegetables,11000,4,2,10500,1000,FALSE,1
+Fruits & Vegetables,Zama Organics Sweet Potato,3700,16,3,3100,250,FALSE,250
+Fruits & Vegetables,Beetroot,1600,18,3,1300,500,FALSE,500
+Fruits & Vegetables,Capsicum,2600,19,3,2100,500,FALSE,500
+Fruits & Vegetables,Carrot,1900,21,3,1500,500,FALSE,500
+Fruits & Vegetables,Garlic,1700,23,3,1300,200,FALSE,200
+Fruits & Vegetables,Carrot,1300,15,0,1100,250,TRUE,200
+Fruits & Vegetables,Beetroot,1100,18,0,900,250,TRUE,250
+Fruits & Vegetables,Moong Sprouts,3500,17,0,2900,200,TRUE,200
+Fruits & Vegetables,Safal Frozen Mixed Vegetables,6000,5,0,5700,500,TRUE,500
+Fruits & Vegetables,Safal Frozen Corn,4100,4,0,3900,200,TRUE,200
+Fruits & Vegetables,Safal Frozen - Sweet Corn,16000,5,0,15200,1000,TRUE,1
+Cooking Essentials,Maggi 2 Minute Masala Noodles,1200,0,6,1200,70,FALSE,70
+Cooking Essentials,iD Idli & Dosa Batter ,8000,15,6,6800,1000,FALSE,1
+Cooking Essentials,Tata Salt,2400,0,6,2400,1000,FALSE,1
+Cooking Essentials,Arden Eggs White,9700,0,4,9700,696,FALSE,12
+Cooking Essentials,Arden Eggs White,6500,15,4,5500,348,FALSE,6
+Cooking Essentials,Fortune Sunlite Refined Sunflower (Pouch),23000,4,6,21900,1000,FALSE,1
