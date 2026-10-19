@@ -17,8 +17,6 @@ Most inventory reports only count how many products are unavailable. I built thi
 
 ## 2. Pipeline Architecture & Workflow
 
-### Snowflake SQL Query Output (Restock Priority Window Function)
-![Snowflake Window Function Results](dashboard/snowflake_restock_results.png)
 
 ```text
 Local CSV Catalog (3,731 SKUs)
@@ -59,6 +57,9 @@ Across the **3,731 unique SKUs** tracked in the dark-store catalog:
 | **Packaged Food** | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
 | **Cooking Essentials** | 514 | 64 | 12.5% | 7.2% | ₹10,44,171 |
 | **Munchies** | 514 | 64 | 12.5% | 7.2% | ₹10,44,171 |
+
+### Snowflake SQL Query Output (Restock Priority Window Function)
+![Snowflake Window Function Results](dashboard/snowflake_restock_results.png)
 
 **Where Operations Should Act First:**
 1. **Protect High-Margin Impulse Categories:** *Chocolates & Candies*, *Ice Cream & Desserts*, and *Packaged Food* represent **₹39.03 Lakhs (43.8%)** of total revenue at risk. Tightening restock buffers on these three categories recovers nearly half the total exposure.
