@@ -1,0 +1,36 @@
+/*=============================================================================
+  File: inventory_kpi_measures.dax
+  Description: Core DAX measures & calculated columns used in the Power BI 
+               Executive Operations Dashboard (_Measures table).
+=============================================================================*/
+
+-- 1. Total Catalog SKUs
+Total SKUs = 
+COUNTROWS('VW_ZEPTO_ANALYTICS_DASHBOARD')
+
+-- 2. Out-of-Stock (OOS) SKU Count
+OOS Count = 
+CALCULATE(
+    COUNTROWS('VW_ZEPTO_ANALYTICS_DASHBOARD'),
+    'VW_ZEPTO_ANALYTICS_DASHBOARD'[IS_OUT_OF_STOCK] = TRUE()
+)
+
+-- 3. Operational Stockout Rate (%)
+Stockout Rate % = 
+DIVIDE([OOS Count], [Total SKUs], 0)
+
+-- 4. Quantified Revenue at Risk (INR ₹)
+Revenue at Risk = 
+SUM('VW_ZEPTO_ANALYTICS_DASHBOARD'[POTENTIAL_STOCKOUT_LOSS_INR])
+
+-- 5. Average Promotional Discount (%)
+Avg Discount % = 
+AVERAGE('VW_ZEPTO_ANALYTICS_DASHBOARD'[DISCOUNT_PERCENT]) / 100
+
+-- 6. Calculated Column: Stock Status (Used for Donut Chart Legend)
+Stock Status = 
+IF(
+    'VW_ZEPTO_ANALYTICS_DASHBOARD'[IS_OUT_OF_STOCK] = TRUE(), 
+    "Out of Stock", 
+    "In Stock"
+)
