@@ -17,6 +17,9 @@ Most inventory reports only count how many products are unavailable. I built thi
 
 ## 2. Pipeline Architecture & Workflow
 
+### Snowflake SQL Query Output (Restock Priority Window Function)
+![Snowflake Window Function Results](dashboard/snowflake_restock_results.png)
+
 ```text
 Local CSV Catalog (3,731 SKUs)
 │
