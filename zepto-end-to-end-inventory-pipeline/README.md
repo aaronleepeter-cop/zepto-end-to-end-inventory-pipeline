@@ -1,183 +1,110 @@
-# Zepto End-to-End Cloud Data Pipeline: Dark-Store Inventory & Revenue Leakage Analytics
-**Tech Stack:** Python (`boto3`) • AWS S3 • Snowflake Data Warehouse • SQL • Power BI (DAX)
+# Zepto End-to-End Inventory Pipeline
 
+**Tech Stack:** Python (`boto3`) • AWS S3 • Snowflake • SQL • Power BI (DAX)
 
+![Zepto Inventory Operations Dashboard](dashboard/Zepto_Operations_Dashboard.png)
 
-!\[Dashboard Preview](dashboard/dashboard\_overview.png)
+## 1. Why I Built This & Questions Answered
+In 10-minute quick-commerce, dark stores run on tight shelf space. When an everyday item goes out of stock, Zepto doesn't just lose that single item—customers often abandon their entire cart. 
 
+Most inventory reports only count how many products are unavailable. I built this end-to-end pipeline to answer four practical operational questions:
+1. **How much revenue is actually at risk** from out-of-stock (OOS) items, and which categories are bleeding the most money?
+2. **Is the stockout problem driven by high-margin impulse items or everyday staples?**
+3. **Which low-stock SKUs (2 or fewer units left) need immediate restocking** before they hit zero?
+4. **How can we automate the workflow** from raw CSV files to AWS S3, Snowflake, and Power BI without burning cloud credits?
 
+---
 
-\## 1. The Business Problem
-
-In 10-minute quick-commerce (Zepto, Blinkit, Instamart), dark stores operate with limited shelf space and high inventory turnover. When high-velocity items go out of stock, the business doesn't just lose a single item sale—customers often abandon their entire cart and switch apps.
-
-
-
-Most retail dashboards only report \*how many\* items are out of stock. I built this end-to-end data pipeline to answer a more practical operational question: \*\*Which product categories are experiencing the highest stockout rates, and how much revenue is actually at risk because of them?\*\*
-
-
-
-\---
-
-
-
-\## 2. Pipeline Architecture \& Workflow
-
-
+## 2. Pipeline Architecture & Workflow
 
 ```text
-
-\[ Local CSV Catalog ] 
-
-&#x20;        │
-
-&#x20;        ▼  Python (boto3 + dotenv)
-
-\[ AWS S3 Landing Zone ]  (Bucket: ap-southeast-2 | IAM Scoped Access)
-
-&#x20;        │
-
-&#x20;        ▼  External Stage + COPY INTO
-
-\[ Snowflake Data Warehouse ]  (DB: ZEPTO\_DB | Schema: ANALYTICS | Auto-Suspend: 60s)
-
-&#x20;        │
-
-&#x20;        ▼  Analytical View (VW\_ZEPTO\_ANALYTICS\_DASHBOARD)
-
-\[ Power BI Desktop ]  (Import Mode | Custom DAX Measures | Conditional Formatting)
-
+Local CSV Catalog (3,731 SKUs)
+│
+├──► 1. Python Ingestion (boto3 + dotenv)
+▼
+AWS S3 Landing Zone (Region: ap-southeast-2 | Scoped IAM Access)
+│
+├──► 2. Snowflake External Stage + COPY INTO
+▼
+Snowflake Data Warehouse (ZEPTO_DB.ANALYTICS | 60s Auto-Suspend)
+│
+├──► 3. SQL Transformation View & Window Functions
+▼
+Power BI Operations Dashboard (DAX Measures & Category Risk Table)
 ```
 
+---
 
+## 3. What This Project Solved
 
-1\. \*\*Automated Cloud Staging (`scripts/upload\_to\_s3.py`):\*\* A Python script validates the processed dataset (3,731 SKUs) and uploads it to an AWS S3 bucket in `ap-southeast-2` using scoped IAM credentials.
+### Technical Problems Solved
+* **Automated Cloud Staging:** Replaced manual file uploads with a Python `boto3` script that validates local catalog files and pushes them to an AWS S3 bucket using environment variables (`.env`) so IAM keys are never exposed in code.
+* **Clean CSV Parsing & Safe Math:** Configured Snowflake's file format to handle commas inside product names (`FIELD_OPTIONALLY_ENCLOSED_BY = '"'`) and used `DIV0()` when calculating price-per-100g so zero-weight items never crash the pipeline.
+* **Zero Idle Cloud Billing:** Configured the Snowflake warehouse (`ZEPTO_WH`) on `X-SMALL` with a 60-second `AUTO_SUSPEND` so compute shuts down immediately after queries finish.
+* **Upstream SQL Modeling:** Pushed brand extraction, discount bucketing, restock priority ranking (`DENSE_RANK() OVER (PARTITION BY category...)`), and stockout loss math into Snowflake (`VW_ZEPTO_ANALYTICS_DASHBOARD`) so Power BI stays fast and lightweight.
 
-2\. \*\*Warehouse Ingestion (`sql/01` \& `02`):\*\* Snowflake connects to the S3 bucket via an External Stage and loads raw records into `FACT\_ZEPTO\_INVENTORY` using batch `COPY INTO` statements. Compute costs are controlled using an `X-SMALL` warehouse (`ZEPTO\_WH`) configured to auto-suspend after 60 seconds of idle time.
+### Business Problems Solved (Key Findings)
+Across the **3,731 unique SKUs** tracked in the dark-store catalog:
+* **Stockout Rate:** **453 SKUs (12.14%)** are out of stock, while **87.86%** remain available for order.
+* **Total Revenue at Risk:** Unmet demand across out-of-stock items puts **₹89,14,946 (~₹89.15 Lakhs)** at risk.
+* **Catalog Discounting:** Products carry an average discount of **7.6%** off MRP.
 
-3\. \*\*Transformation Layer (`sql/03\_analytical\_view.sql`):\*\* Rather than bloating the Power BI model with heavy transformations, business logic is handled upstream in Snowflake via `VW\_ZEPTO\_ANALYTICS\_DASHBOARD`. This view extracts brand names, standardizes unit pricing (per 100g), and calculates estimated stockout loss per SKU.
-
-4\. \*\*Executive BI Reporting (`dashboard/`):\*\* Power BI connects directly to the Snowflake analytical view, using a dedicated `\_Measures` table to track catalog availability, promotional discounting, and revenue exposure.
-
-
-
-\---
-
-
-
-\## 3. Key Findings from the Data
-
-
-
-Across the \*\*3,731 SKUs\*\* analyzed in the catalog:
-
-\* \*\*Overall Stockout Rate:\*\* \*\*453 SKUs (12.14%)\*\* are currently out of stock, leaving \*\*87.86%\*\* of the catalog available for immediate fulfillment.
-
-\* \*\*Total Revenue at Risk:\*\* Stockouts represent an estimated \*\*₹89,14,946 (\~₹89.15 Lakhs)\*\* in potential lost revenue across the dark-store network.
-
-\* \*\*Average Catalog Discount:\*\* Products carry an average markdown of \*\*7.6%\*\* off MRP.
-
-
-
-\### Category-Level Breakdown (Where the Money is Leaking)
-
-| Product Category | Total SKUs | OOS SKUs | Stockout Rate % | Avg Discount % | Revenue at Risk (₹) |
-
+| Product Category | Total SKUs | OOS Count | Stockout Rate % | Avg Discount % | Revenue at Risk (₹) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
+| **Chocolates & Candies** | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
+| **Ice Cream & Desserts** | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
+| **Packaged Food** | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
+| **Cooking Essentials** | 514 | 64 | 12.5% | 7.2% | ₹10,44,171 |
+| **Munchies** | 514 | 64 | 12.5% | 7.2% | ₹10,44,171 |
 
-| \*\*Chocolates \& Candies\*\* | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
+**Where Operations Should Act First:**
+1. **Protect High-Margin Impulse Categories:** *Chocolates & Candies*, *Ice Cream & Desserts*, and *Packaged Food* represent **₹39.03 Lakhs (43.8%)** of total revenue at risk. Tightening restock buffers on these three categories recovers nearly half the total exposure.
+2. **Fix Staple Stockouts to Prevent Cart Abandonment:** *Cooking Essentials* and *Munchies* have the highest stockout rate at **12.5% (64 OOS SKUs each)**, risking **₹20.88 Lakhs** combined.
+3. **Pre-Emptive Restocking:** Using the SQL restock priority query (`available_quantity <= 2`), store managers can reorder high-value SKUs before they flip to out-of-stock.
 
-| \*\*Ice Cream \& Desserts\*\* | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
+---
 
-| \*\*Packaged Food\*\* | 388 | 45 | 11.6% | 8.3% | ₹13,01,033 |
+## 4. Repository Structure
 
-| \*\*Cooking Essentials\*\* | 514 | 64 | 12.5% | 7.2% | ₹10,44,171 |
+```text
+zepto-end-to-end-inventory-pipeline/
+├── dashboard/
+│   └── Zepto_Operations_Dashboard.png      # Final Power BI dashboard view
+├── data_sample/
+│   └── zepto_inventory_sample.csv          # Lightweight 100-row sample dataset
+├── dax/
+│   └── inventory_kpi_measures.dax          # DAX formulas used for KPIs & visuals
+├── scripts/
+│   └── upload_to_s3.py                     # Python Boto3 script for AWS S3 staging
+├── sql/
+│   ├── 01_infrastructure_and_stage.sql     # Warehouse, DB, Schema & S3 Stage setup
+│   ├── 02_fact_table_ingestion.sql         # Fact table DDL & COPY INTO load
+│   ├── 03_analytical_view.sql              # Reporting view for Power BI
+│   └── 04_advanced_business_analytics.sql  # Window functions, unit economics & brand share
+├── requirements.txt                        # Python dependencies
+└── README.md
+```
 
-| \*\*Munchies\*\* | 514 | 64 | 12.5% | 7.2% | ₹10,44,171 |
+---
 
-| \*\*Meats, Fish \& Eggs\*\* | — | — | — | — | \~₹8,00,000 |
+## 5. How to Run This Pipeline
 
-
-
-\### Operational Recommendations
-
-1\. \*\*Prioritize Impulse \& High-Margin Restocking:\*\* \*Chocolates \& Candies\*, \*Ice Cream \& Desserts\*, and \*Packaged Food\* account for \*\*₹39.03 Lakhs (43.8%)\*\* of total revenue at risk. Because these are high-margin impulse buys with higher average discounts (8.3%), restocking frequency and safety-stock buffers should be tightened here first.
-
-2\. \*\*Fix Staple Availability in Cooking Essentials \& Munchies:\*\* Both categories suffer from an above-average \*\*12.5% stockout rate\*\* (64 OOS SKUs each), risking over \*\*₹20.88 Lakhs\*\* combined. Stockouts in staple cooking items often trigger full cart abandonment, making vendor lead-time optimization critical for these SKUs.
-
-
-
-\---
-
-
-
-\## 4. Repository Structure
-
-
-
-\* `scripts/upload\_to\_s3.py` — Boto3 ingestion script with environment variable credential handling and error logging.
-
-\* `sql/01\_infrastructure\_and\_stage.sql` — Snowflake warehouse, database, file format, and S3 external stage DDL.
-
-\* `sql/02\_fact\_table\_ingestion.sql` — `FACT\_ZEPTO\_INVENTORY` table creation, `COPY INTO` load, and row-level audit query.
-
-\* `sql/03\_analytical\_view.sql` — SQL view transforming raw inventory into executive KPIs.
-
-\* `dax/inventory\_kpi\_measures.dax` — Full list of DAX measures powering the Power BI cards, bar charts, and conditional formatting.
-
-\* `dashboard/` — Contains the `.pbix` source file and high-resolution dashboard screenshot.
-
-
-
-\---
-
-
-
-\## 5. How to Reproduce This Project
-
-
-
-1\. \*\*Clone the repository and install dependencies:\*\*
-
-&#x20;  ```bash
-
-&#x20;  git clone \[https://github.com/](https://github.com/)<your-username>/zepto-darkstore-stockout-pipeline.git
-
-&#x20;  cd zepto-darkstore-stockout-pipeline
-
-&#x20;  pip install -r requirements.txt
-
-&#x20;  ```
-
-2\. \*\*Configure AWS Credentials:\*\*
-
-&#x20;  Create a `.env` file in the root directory:
-
-&#x20;  ```ini
-
-&#x20;  AWS\_ACCESS\_KEY\_ID=your\_iam\_access\_key
-
-&#x20;  AWS\_SECRET\_ACCESS\_KEY=your\_iam\_secret\_key
-
-&#x20;  AWS\_REGION=ap-southeast-2
-
-&#x20;  S3\_BUCKET\_NAME=your\_s3\_bucket\_name
-
-&#x20;  ```
-
-3\. \*\*Stage Data to S3:\*\*
-
-&#x20;  ```bash
-
-&#x20;  python scripts/upload\_to\_s3.py
-
-&#x20;  ```
-
-4\. \*\*Run Snowflake SQL Scripts:\*\*
-
-&#x20;  Execute `01`, `02`, and `03` inside a Snowflake worksheet to build `VW\_ZEPTO\_ANALYTICS\_DASHBOARD`.
-
-5\. \*\*Open Power BI:\*\*
-
-&#x20;  Open `dashboard/Zepto\_Inventory\_Operations.pbix` and update the Snowflake server parameter under \*Transform Data -> Data source settings\* to refresh with your Snowflake account locator.
-
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Add AWS credentials to a local `.env` file:**
+   ```ini
+   AWS_ACCESS_KEY_ID=your_access_key
+   AWS_SECRET_ACCESS_KEY=your_secret_key
+   AWS_REGION=ap-southeast-2
+   S3_BUCKET_NAME=your_bucket_name
+   ```
+3. **Upload catalog data to AWS S3:**
+   ```bash
+   python scripts/upload_to_s3.py
+   ```
+4. **Build the Snowflake warehouse & views:**
+   Run the scripts inside the `sql/` folder in order (`01` through `04`) inside a Snowflake worksheet.
+5. **View the Dashboard:**
+   Connect Power BI Desktop to `ZEPTO_DB.ANALYTICS.VW_ZEPTO_ANALYTICS_DASHBOARD` and apply the measures in `dax/inventory_kpi_measures.dax`.
